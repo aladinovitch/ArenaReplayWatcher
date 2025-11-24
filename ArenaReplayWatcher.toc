@@ -1,0 +1,8 @@
+## Interface: 30300
+## Title: Arena Replay Watcher
+## Notes: Manage and watch arena replays by ID.
+## Author: Aladine TK
+## Version: 1.0
+## SavedVariables: ArenaReplayDB
+
+ArenaReplayWatcher.lua
