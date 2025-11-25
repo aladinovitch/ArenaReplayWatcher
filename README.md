@@ -39,3 +39,5 @@ The resulting spreadsheet data should look like this (focusing on the final requ
 | Jamesjohnson |	39826246	| No |	Jamesjohnson,39826246 |
 
 To use the data: Copy the entire list of values from the #ARW Addon# column and paste them into the AddOn window after running `/arw`.
+
+**Support:** If you find this AddOn useful, please consider supporting its development via the **'Sponsor' button** on this repository page.
