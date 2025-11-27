@@ -25,27 +25,39 @@ MainFrame:SetScript("OnDragStart", MainFrame.StartMoving)
 MainFrame:SetScript("OnDragStop", MainFrame.StopMovingOrSizing)
 MainFrame:Hide()
 
+-- Decorative header texture behind title
+local HeaderTexture = MainFrame:CreateTexture(nil, "ARTWORK")
+HeaderTexture:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
+HeaderTexture:SetWidth(360)
+HeaderTexture:SetHeight(67)
+HeaderTexture:SetPoint("TOP", 0, 12)
+
 -- Title
 local Title = MainFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-Title:SetPoint("TOP", 0, -15)
-Title:SetText("Arena Replay Watcher")
+Title:SetPoint("TOP", -12, -3)
+Title:SetText("Arena Replay Watcher ")
+
+local TitleCmd = MainFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+TitleCmd:SetPoint("LEFT", Title, "RIGHT", 0, 0)
+TitleCmd:SetText("/arw")
+TitleCmd:SetTextColor(0.7, 0.7, 0.7)
 
 -- Close Button
 local CloseButton = CreateFrame("Button", nil, MainFrame, "UIPanelCloseButton")
 CloseButton:SetPoint("TOPRIGHT", -5, -5)
 
 -- Headers
-local HeaderWatched = MainFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-HeaderWatched:SetPoint("TOPLEFT", 25, -35)
-HeaderWatched:SetText("Watched")
-
 local HeaderReplay = MainFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-HeaderReplay:SetPoint("LEFT", HeaderWatched, "RIGHT", 20, 0)
+HeaderReplay:SetPoint("TOPLEFT", 25, -35)
 HeaderReplay:SetText("Replay")
 
 local HeaderAction = MainFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-HeaderAction:SetPoint("TOPRIGHT", -45, -35)
+HeaderAction:SetPoint("TOPRIGHT", -80, -35)
 HeaderAction:SetText("Action")
+
+local HeaderWatched = MainFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+HeaderWatched:SetPoint("RIGHT", HeaderAction, "LEFT", -15, 0)
+HeaderWatched:SetText("Watched")
 
 -- Scroll Frame for List
 local ScrollFrame = CreateFrame("ScrollFrame", "ArenaReplayWatcherScrollFrame", MainFrame, "UIPanelScrollFrameTemplate")
@@ -128,7 +140,7 @@ local function RefreshList()
         end)
 
         local text = row:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-        text:SetPoint("LEFT", check, "RIGHT", 5, 0)
+        text:SetPoint("LEFT", 5, 0)
         text:SetText(match.player .. " (" .. match.id .. ")")
 
         -- Delete Button (X)
@@ -147,6 +159,10 @@ local function RefreshList()
         watchBtn:SetText("Watch")
         watchBtn:SetNormalFontObject("GameFontNormalSmall")
         watchBtn:SetHighlightFontObject("GameFontHighlightSmall")
+        
+        -- Move checkbox to left of watch button
+        check:ClearAllPoints()
+        check:SetPoint("RIGHT", watchBtn, "LEFT", -5, 0)
         
         watchBtn:SetScript("OnClick", function()
             -- Interaction Logic
