@@ -6,6 +6,10 @@ local addonName, NS = ...
 -- Defaults
 local defaultDB = {
     matches = {}, -- { {player="Name", id="123", watched=false}, ... }
+    settings = {
+        serverName = "Warmane",
+        ladderURL = "https://armory.warmane.com/ladder"
+    }
 }
 
 -- Main Frame
@@ -41,6 +45,13 @@ local TitleCmd = MainFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall
 TitleCmd:SetPoint("LEFT", Title, "RIGHT", 0, 0)
 TitleCmd:SetText("/arw")
 TitleCmd:SetTextColor(0.7, 0.7, 0.7)
+
+-- Settings Button (Cogwheel)
+local SettingsButton = CreateFrame("Button", nil, MainFrame)
+SettingsButton:SetSize(20, 20)
+SettingsButton:SetPoint("TOPRIGHT", -45, -14)
+SettingsButton:SetNormalTexture("Interface\\Icons\\Trade_Engineering")
+SettingsButton:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square")
 
 -- Close Button
 local CloseButton = CreateFrame("Button", nil, MainFrame, "UIPanelCloseButton")
@@ -114,6 +125,90 @@ ImportSaveButton:SetText("Save")
 
 local ImportCloseButton = CreateFrame("Button", nil, ImportFrame, "UIPanelCloseButton")
 ImportCloseButton:SetPoint("TOPRIGHT", -5, -5)
+
+-- Settings Frame
+local SettingsFrame = CreateFrame("Frame", "ArenaReplaySettingsFrame", UIParent)
+SettingsFrame:SetSize(400, 220)
+SettingsFrame:SetPoint("CENTER")
+SettingsFrame:SetBackdrop({
+    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+    tile = true, tileSize = 32, edgeSize = 32,
+    insets = { left = 11, right = 12, top = 12, bottom = 11 }
+})
+SettingsFrame:Hide()
+SettingsFrame:SetFrameStrata("DIALOG")
+SettingsFrame:SetMovable(true)
+SettingsFrame:EnableMouse(true)
+SettingsFrame:RegisterForDrag("LeftButton")
+SettingsFrame:SetScript("OnDragStart", SettingsFrame.StartMoving)
+SettingsFrame:SetScript("OnDragStop", SettingsFrame.StopMovingOrSizing)
+
+local SettingsTitle = SettingsFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+SettingsTitle:SetPoint("TOP", 0, -15)
+SettingsTitle:SetText("Settings")
+
+local SettingsCloseButton = CreateFrame("Button", nil, SettingsFrame, "UIPanelCloseButton")
+SettingsCloseButton:SetPoint("TOPRIGHT", -5, -5)
+
+-- Description Label
+local DescLabel = SettingsFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+DescLabel:SetPoint("TOPLEFT", 20, -35)
+DescLabel:SetWidth(360)
+DescLabel:SetJustifyH("LEFT")
+DescLabel:SetText("Add the name of your server and the corresponding ladder URL if provided by the server.")
+
+-- Server Name Label
+local ServerLabel = SettingsFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+ServerLabel:SetPoint("TOPLEFT", 20, -70)
+ServerLabel:SetText("Server:")
+
+-- Server Name EditBox
+local ServerEditBox = CreateFrame("EditBox", nil, SettingsFrame)
+ServerEditBox:SetSize(340, 25)
+ServerEditBox:SetPoint("TOPLEFT", ServerLabel, "BOTTOMLEFT", 0, -5)
+ServerEditBox:SetBackdrop({
+    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tile = true, tileSize = 16, edgeSize = 16,
+    insets = { left = 4, right = 4, top = 4, bottom = 4 }
+})
+ServerEditBox:SetFontObject(ChatFontNormal)
+ServerEditBox:SetTextInsets(5, 0, 0, 0)
+ServerEditBox:SetAutoFocus(false)
+ServerEditBox:SetMaxLetters(50)
+
+-- Ladder URL Label
+local LadderLabel = SettingsFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+LadderLabel:SetPoint("TOPLEFT", ServerEditBox, "BOTTOMLEFT", 0, -10)
+LadderLabel:SetText("Ladder URL:")
+
+-- Ladder Link Button (Open External)
+local LadderLinkButton = CreateFrame("Button", nil, SettingsFrame, "UIPanelButtonTemplate")
+LadderLinkButton:SetSize(50, 20)
+LadderLinkButton:SetPoint("LEFT", LadderLabel, "RIGHT", 10, 0)
+LadderLinkButton:SetText("Open")
+
+-- Ladder URL EditBox
+local LadderEditBox = CreateFrame("EditBox", nil, SettingsFrame)
+LadderEditBox:SetSize(340, 25)
+LadderEditBox:SetPoint("TOPLEFT", LadderLabel, "BOTTOMLEFT", 0, -5)
+LadderEditBox:SetBackdrop({
+    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tile = true, tileSize = 16, edgeSize = 16,
+    insets = { left = 4, right = 4, top = 4, bottom = 4 }
+})
+LadderEditBox:SetFontObject(ChatFontNormal)
+LadderEditBox:SetTextInsets(5, 0, 0, 0)
+LadderEditBox:SetAutoFocus(false)
+LadderEditBox:SetMaxLetters(200)
+
+-- Settings Save Button
+local SettingsSaveButton = CreateFrame("Button", nil, SettingsFrame, "GameMenuButtonTemplate")
+SettingsSaveButton:SetSize(100, 25)
+SettingsSaveButton:SetPoint("BOTTOM", 0, 15)
+SettingsSaveButton:SetText("Save")
 
 -- Logic
 
@@ -207,6 +302,71 @@ local function RefreshList()
     ScrollChild:SetHeight(yOffset)
 end
 
+-- Settings Button Click Handler
+SettingsButton:SetScript("OnClick", function()
+    SettingsFrame:Show()
+    -- Load current settings
+    if ArenaReplayDB and ArenaReplayDB.settings then
+        ServerEditBox:SetText(ArenaReplayDB.settings.serverName or "Warmane")
+        LadderEditBox:SetText(ArenaReplayDB.settings.ladderURL or "https://armory.warmane.com/ladder")
+    end
+    ServerEditBox:SetCursorPosition(0)
+    LadderEditBox:SetCursorPosition(0)
+end)
+
+-- Settings Save Button Handler
+SettingsSaveButton:SetScript("OnClick", function()
+    if not ArenaReplayDB.settings then
+        ArenaReplayDB.settings = {}
+    end
+    ArenaReplayDB.settings.serverName = ServerEditBox:GetText()
+    ArenaReplayDB.settings.ladderURL = LadderEditBox:GetText()
+    print("|cff00ff00[ArenaReplay]|r Settings saved!")
+    SettingsFrame:Hide()
+end)
+
+-- Adds a full frame to copy the URL
+local ARENAREPLAY_COPY_URL_Frame = CreateFrame("Frame", "ArenaReplayCopyURLFrame", UIParent, "DialogBoxFrame")
+ARENAREPLAY_COPY_URL_Frame:SetSize(800, 115)
+ARENAREPLAY_COPY_URL_Frame:SetPoint("CENTER", 0, 150)
+ARENAREPLAY_COPY_URL_Frame:Hide()
+ARENAREPLAY_COPY_URL_Frame:EnableKeyboard(true) -- Allows Esc/Enter key events
+
+-- 1. Main Text
+local TextLabel = ARENAREPLAY_COPY_URL_Frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+TextLabel:SetPoint("TOPLEFT", 40, -20)
+TextLabel:SetWidth(720) -- Ensure text wraps nicely inside the 800px frame
+TextLabel:SetText("Press Ctrl+C to copy the URL:")
+
+-- 2. Custom Edit Box (Crucial for width/multiline)
+local EditBox = CreateFrame("EditBox", nil, ARENAREPLAY_COPY_URL_Frame, "InputBoxTemplate")
+EditBox:SetSize(720, 30) -- Now it can be 720 wide!
+EditBox:SetPoint("TOP", TextLabel, "BOTTOM", 0, -5)
+EditBox:SetAutoFocus(true)
+
+-- 3. Show Logic (Function to call when URL is available)
+function ArenaReplay_ShowCopyURL(url)
+    ARENAREPLAY_COPY_URL_Frame:Show()
+    EditBox:SetText(url)
+    EditBox:HighlightText() -- Selects the text for easy copying
+    EditBox:SetFocus()      -- Ensures keyboard focus is on the box
+
+    -- Handle ESC key to close
+    ARENAREPLAY_COPY_URL_Frame:SetScript("OnKeyDown", function(self, key)
+        if key == "ESCAPE" or key == "ENTER" then
+            self:Hide()
+        end
+    end)
+end
+
+-- Ladder Link Button Click Handler
+LadderLinkButton:SetScript("OnClick", function()
+    local url = LadderEditBox:GetText()
+    if url and url ~= "" then
+        ArenaReplay_ShowCopyURL(url)
+    end
+end)
+
 ImportButton:SetScript("OnClick", function()
     ImportFrame:Show()
     ImportEditBox:SetText("")
@@ -245,6 +405,12 @@ eventFrame:SetScript("OnEvent", function(self, event, arg1)
         end
         if not ArenaReplayDB.matches then
             ArenaReplayDB.matches = {}
+        end
+        if not ArenaReplayDB.settings then
+            ArenaReplayDB.settings = {
+                serverName = "Warmane",
+                ladderURL = "https://armory.warmane.com/ladder"
+            }
         end
         RefreshList()
         self:UnregisterEvent("ADDON_LOADED")
