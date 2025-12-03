@@ -40,6 +40,10 @@ The resulting spreadsheet data should look like this (focusing on the final requ
 
 To use the data: Copy the entire list of values from the #ARW Addon# column and paste them into the AddOn window after running `/arw`.
 
+### 📸 Screenshot
+
+![WoWScrnShot_120325_210852](https://github.com/user-attachments/assets/b239c0f4-8907-4d17-9c46-8b6addd901b0)
+
 ## 🎬 Video Guide: Full Addon Guide: Setup, Data Import, and Arena Study Workflow
 Watch the video below for a complete walkthrough on how to install the addon, configure your server settings, import match data from your spreadsheet, and begin tracking opponents in-game.
 
