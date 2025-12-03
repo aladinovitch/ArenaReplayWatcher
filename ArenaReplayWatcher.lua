@@ -46,52 +46,50 @@ TitleCmd:SetPoint("LEFT", Title, "RIGHT", 0, 0)
 TitleCmd:SetText("/arw")
 TitleCmd:SetTextColor(0.7, 0.7, 0.7)
 
--- Settings Button (Cogwheel)
-local SettingsButton = CreateFrame("Button", nil, MainFrame)
-SettingsButton:SetSize(20, 20)
-SettingsButton:SetPoint("TOPRIGHT", -45, -14)
-SettingsButton:SetNormalTexture("Interface\\Icons\\Trade_Engineering")
-SettingsButton:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square")
-
 -- Close Button
 local CloseButton = CreateFrame("Button", nil, MainFrame, "UIPanelCloseButton")
 CloseButton:SetPoint("TOPRIGHT", -5, -5)
 
 -- Headers
+-- Background panel for header section
+local HeaderBackgroundPanel = CreateFrame("Frame", nil, MainFrame)
+HeaderBackgroundPanel:SetSize(360, 40)
+HeaderBackgroundPanel:SetPoint("TOP", 0, -35)
+HeaderBackgroundPanel:SetBackdrop({
+    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+    tile = true, tileSize = 32, edgeSize = 16,
+    insets = { left = 4, right = 4, top = 4, bottom = 4 }
+})
+
 -- Icon for Replay
-local ReplayCameraIcon = MainFrame:CreateTexture(nil, "OVERLAY")
-ReplayCameraIcon:SetTexture("Interface\\Icons\\Achievement_featsofstrength_gladiator_04")
-ReplayCameraIcon:SetSize(24,24)
-ReplayCameraIcon:SetPoint("TOPLEFT", 25, -35)
+local HeaderReplayIcon = MainFrame:CreateTexture(nil, "OVERLAY")
+HeaderReplayIcon:SetTexture("Interface\\Icons\\Achievement_featsofstrength_gladiator_04")
+HeaderReplayIcon:SetSize(24,24)
+HeaderReplayIcon:SetPoint("TOPLEFT", 29, -43)
 
 local HeaderReplay = MainFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-HeaderReplay:SetPoint("LEFT", ReplayCameraIcon, "RIGHT", 3, -5)
+HeaderReplay:SetPoint("LEFT", HeaderReplayIcon, "RIGHT", 3, -5)
 HeaderReplay:SetText("Match ID")
 
 -- Arena Icon for Action
 local HeaderActionIcon = MainFrame:CreateTexture(nil, "OVERLAY")
 HeaderActionIcon:SetTexture("Interface\\Icons\\achievement_arena_2v2_7")
 HeaderActionIcon:SetSize(24, 24)
-HeaderActionIcon:SetPoint("TOPRIGHT", -82, -35)
-
---[[
-local HeaderAction = MainFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-HeaderAction:SetPoint("LEFT", HeaderActionIcon, "RIGHT", 3, 0)
-HeaderAction:SetText("Action")
-]]--
+HeaderActionIcon:SetPoint("TOPRIGHT", -82, -43)
 
 -- Eye Icon for Watched
 local HeaderWatchedIcon = MainFrame:CreateTexture(nil, "OVERLAY")
 --HeaderWatchedIcon:SetTexture("Interface\\Icons\\INV_Misc_Eye_01")
 HeaderWatchedIcon:SetTexture("Interface\\Icons\\Ability_eyeoftheowl")
 HeaderWatchedIcon:SetSize(24, 24)
-HeaderWatchedIcon:SetPoint("TOPRIGHT", -130, -35)
+HeaderWatchedIcon:SetPoint("TOPRIGHT", -130, -43)
+-- End of header section
 
--- Scroll Frame for List
 local ScrollFrame = CreateFrame("ScrollFrame", "ArenaReplayWatcherScrollFrame", MainFrame, "UIPanelScrollFrameTemplate")
-ScrollFrame:SetPoint("TOPLEFT", 20, -65)
+ScrollFrame:SetPoint("TOPLEFT", 20, -76)
 ScrollFrame:SetPoint("BOTTOMRIGHT", -40, 50)
 
+-- Scroll Frame for List
 local ScrollChild = CreateFrame("Frame")
 ScrollChild:SetSize(340, 1000) -- Height will be adjusted dynamically
 ScrollFrame:SetScrollChild(ScrollChild)
@@ -102,10 +100,17 @@ ImportButton:SetSize(100, 25)
 ImportButton:SetPoint("BOTTOMLEFT", 20, 15)
 ImportButton:SetText("Import CSV")
 
+-- Settings Button (Cogwheel)
+local SettingsButton = CreateFrame("Button", nil, MainFrame)
+SettingsButton:SetSize(20, 20)
+SettingsButton:SetPoint("BOTTOMRIGHT", -18, 17)
+SettingsButton:SetNormalTexture("Interface\\Icons\\Trade_Engineering")
+SettingsButton:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square")
+
 -- Clear Button
 local ClearButton = CreateFrame("Button", nil, MainFrame, "GameMenuButtonTemplate")
 ClearButton:SetSize(100, 25)
-ClearButton:SetPoint("BOTTOMRIGHT", -20, 15)
+ClearButton:SetPoint("BOTTOMRIGHT", -52, 15)
 ClearButton:SetText("Clear All")
 
 -- Import Window
