@@ -2,8 +2,7 @@
 ## Title: Arena Replay Watcher
 ## Notes: Manage and watch arena replays by ID.
 ## Author: Aladine TK
-## Version: 1.2
+## Version: 1.3
 ## SavedVariables: ArenaReplayDB
 
 ArenaReplayWatcher.lua
-
