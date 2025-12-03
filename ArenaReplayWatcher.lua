@@ -58,21 +58,38 @@ local CloseButton = CreateFrame("Button", nil, MainFrame, "UIPanelCloseButton")
 CloseButton:SetPoint("TOPRIGHT", -5, -5)
 
 -- Headers
+-- Icon for Replay
+local ReplayCameraIcon = MainFrame:CreateTexture(nil, "OVERLAY")
+ReplayCameraIcon:SetTexture("Interface\\Icons\\Achievement_featsofstrength_gladiator_04")
+ReplayCameraIcon:SetSize(24,24)
+ReplayCameraIcon:SetPoint("TOPLEFT", 25, -35)
+
 local HeaderReplay = MainFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-HeaderReplay:SetPoint("TOPLEFT", 25, -35)
-HeaderReplay:SetText("Replay")
+HeaderReplay:SetPoint("LEFT", ReplayCameraIcon, "RIGHT", 3, -5)
+HeaderReplay:SetText("Match ID")
 
+-- Arena Icon for Action
+local HeaderActionIcon = MainFrame:CreateTexture(nil, "OVERLAY")
+HeaderActionIcon:SetTexture("Interface\\Icons\\achievement_arena_2v2_7")
+HeaderActionIcon:SetSize(24, 24)
+HeaderActionIcon:SetPoint("TOPRIGHT", -82, -35)
+
+--[[
 local HeaderAction = MainFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-HeaderAction:SetPoint("TOPRIGHT", -80, -35)
+HeaderAction:SetPoint("LEFT", HeaderActionIcon, "RIGHT", 3, 0)
 HeaderAction:SetText("Action")
+]]--
 
-local HeaderWatched = MainFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-HeaderWatched:SetPoint("RIGHT", HeaderAction, "LEFT", -15, 0)
-HeaderWatched:SetText("Watched")
+-- Eye Icon for Watched
+local HeaderWatchedIcon = MainFrame:CreateTexture(nil, "OVERLAY")
+--HeaderWatchedIcon:SetTexture("Interface\\Icons\\INV_Misc_Eye_01")
+HeaderWatchedIcon:SetTexture("Interface\\Icons\\Ability_eyeoftheowl")
+HeaderWatchedIcon:SetSize(24, 24)
+HeaderWatchedIcon:SetPoint("TOPRIGHT", -130, -35)
 
 -- Scroll Frame for List
 local ScrollFrame = CreateFrame("ScrollFrame", "ArenaReplayWatcherScrollFrame", MainFrame, "UIPanelScrollFrameTemplate")
-ScrollFrame:SetPoint("TOPLEFT", 20, -55)
+ScrollFrame:SetPoint("TOPLEFT", 20, -65)
 ScrollFrame:SetPoint("BOTTOMRIGHT", -40, 50)
 
 local ScrollChild = CreateFrame("Frame")
@@ -225,9 +242,25 @@ local function RefreshList()
         local row = CreateFrame("Frame", nil, ScrollChild)
         row:SetSize(340, 20)
         row:SetPoint("TOPLEFT", 0, -yOffset)
+        
+        -- Hover Highlight
+        local highlight = row:CreateTexture(nil, "BACKGROUND")
+        highlight:SetAllPoints(row)
+        highlight:SetTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight")
+        highlight:SetBlendMode("ADD")
+        highlight:SetAlpha(0.7)
+        highlight:Hide()
+        
+        row:EnableMouse(true)
+        row:SetScript("OnEnter", function(self)
+            highlight:Show()
+        end)
+        row:SetScript("OnLeave", function(self)
+            highlight:Hide()
+        end)
 
         local check = CreateFrame("CheckButton", nil, row, "UICheckButtonTemplate")
-        check:SetSize(20, 20)
+        check:SetSize(24, 24)
         check:SetPoint("LEFT", 0, 0)
         check:SetChecked(match.watched)
         check:SetScript("OnClick", function(self)
@@ -297,7 +330,7 @@ local function RefreshList()
             end
         end)
 
-        yOffset = yOffset + 20
+        yOffset = yOffset + 24
     end
     ScrollChild:SetHeight(yOffset)
 end
