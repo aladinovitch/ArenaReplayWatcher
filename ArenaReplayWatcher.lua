@@ -53,40 +53,83 @@ CloseButton:SetPoint("TOPRIGHT", -5, -5)
 -- Headers
 -- Background panel for header section
 local HeaderBackgroundPanel = CreateFrame("Frame", nil, MainFrame)
-HeaderBackgroundPanel:SetSize(360, 40)
-HeaderBackgroundPanel:SetPoint("TOP", 0, -35)
+HeaderBackgroundPanel:SetSize(360, 37)
+HeaderBackgroundPanel:SetPoint("TOP", 0, -30)
 HeaderBackgroundPanel:SetBackdrop({
-    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-    tile = true, tileSize = 32, edgeSize = 16,
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    edgeSize = 14,
     insets = { left = 4, right = 4, top = 4, bottom = 4 }
 })
+local HeaderIconPositionsYAxis = -37
 
--- Icon for Replay
+-- Icon for Match ID
 local HeaderReplayIcon = MainFrame:CreateTexture(nil, "OVERLAY")
 HeaderReplayIcon:SetTexture("Interface\\Icons\\Achievement_featsofstrength_gladiator_04")
 HeaderReplayIcon:SetSize(24,24)
-HeaderReplayIcon:SetPoint("TOPLEFT", 29, -43)
+HeaderReplayIcon:SetPoint("TOPLEFT", 26, HeaderIconPositionsYAxis)
+
+-- Tooltip for Match ID Icon
+local HeaderReplayIconFrame = CreateFrame("Frame", nil, MainFrame)
+HeaderReplayIconFrame:SetSize(24, 24)
+HeaderReplayIconFrame:SetPoint("TOPLEFT", 26, HeaderIconPositionsYAxis)
+HeaderReplayIconFrame:EnableMouse(true)
+HeaderReplayIconFrame:SetScript("OnEnter", function(self)
+	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+	GameTooltip:SetText("Player name and Match ID", 1, 1, 1)
+	GameTooltip:Show()
+end)
+HeaderReplayIconFrame:SetScript("OnLeave", function(self)
+	GameTooltip:Hide()
+end)
 
 local HeaderReplay = MainFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
 HeaderReplay:SetPoint("LEFT", HeaderReplayIcon, "RIGHT", 3, -5)
 HeaderReplay:SetText("Match ID")
-
--- Arena Icon for Action
-local HeaderActionIcon = MainFrame:CreateTexture(nil, "OVERLAY")
-HeaderActionIcon:SetTexture("Interface\\Icons\\achievement_arena_2v2_7")
-HeaderActionIcon:SetSize(24, 24)
-HeaderActionIcon:SetPoint("TOPRIGHT", -82, -43)
 
 -- Eye Icon for Watched
 local HeaderWatchedIcon = MainFrame:CreateTexture(nil, "OVERLAY")
 --HeaderWatchedIcon:SetTexture("Interface\\Icons\\INV_Misc_Eye_01")
 HeaderWatchedIcon:SetTexture("Interface\\Icons\\Ability_eyeoftheowl")
 HeaderWatchedIcon:SetSize(24, 24)
-HeaderWatchedIcon:SetPoint("TOPRIGHT", -130, -43)
+HeaderWatchedIcon:SetPoint("TOPRIGHT", -130, HeaderIconPositionsYAxis)
+
+-- Tooltip for Watched Icon
+local HeaderWatchedIconFrame = CreateFrame("Frame", nil, MainFrame)
+HeaderWatchedIconFrame:SetSize(24, 24)
+HeaderWatchedIconFrame:SetPoint("TOPRIGHT", -130, HeaderIconPositionsYAxis)
+HeaderWatchedIconFrame:EnableMouse(true)
+HeaderWatchedIconFrame:SetScript("OnEnter", function(self)
+	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+	GameTooltip:SetText("Mark as Watched", 1, 1, 1)
+	GameTooltip:Show()
+end)
+HeaderWatchedIconFrame:SetScript("OnLeave", function(self)
+	GameTooltip:Hide()
+end)
+
+-- Arena Icon for Watch
+local HeaderActionIcon = MainFrame:CreateTexture(nil, "OVERLAY")
+HeaderActionIcon:SetTexture("Interface\\Icons\\achievement_arena_2v2_7")
+HeaderActionIcon:SetSize(24, 24)
+HeaderActionIcon:SetPoint("TOPRIGHT", -86, HeaderIconPositionsYAxis)
+
+-- Tooltip for Watch Icon
+local HeaderActionIconFrame = CreateFrame("Frame", nil, MainFrame)
+HeaderActionIconFrame:SetSize(24, 24)
+HeaderActionIconFrame:SetPoint("TOPRIGHT", -86, HeaderIconPositionsYAxis)
+HeaderActionIconFrame:EnableMouse(true)
+HeaderActionIconFrame:SetScript("OnEnter", function(self)
+	GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+	GameTooltip:SetText("Watch Replay", 1, 1, 1)
+	GameTooltip:Show()
+end)
+HeaderActionIconFrame:SetScript("OnLeave", function(self)
+	GameTooltip:Hide()
+end)
 -- End of header section
 
 local ScrollFrame = CreateFrame("ScrollFrame", "ArenaReplayWatcherScrollFrame", MainFrame, "UIPanelScrollFrameTemplate")
-ScrollFrame:SetPoint("TOPLEFT", 20, -76)
+ScrollFrame:SetPoint("TOPLEFT", 20, -70)
 ScrollFrame:SetPoint("BOTTOMRIGHT", -40, 50)
 
 -- Scroll Frame for List
@@ -106,6 +149,14 @@ SettingsButton:SetSize(20, 20)
 SettingsButton:SetPoint("BOTTOMRIGHT", -18, 17)
 SettingsButton:SetNormalTexture("Interface\\Icons\\Trade_Engineering")
 SettingsButton:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square")
+SettingsButton:SetScript("OnEnter", function(self)
+	GameTooltip:SetOwner(self, "ANCHOR_TOP")
+	GameTooltip:SetText("Set your server ladder URL", 1, 1, 1)
+	GameTooltip:Show()
+end)
+SettingsButton:SetScript("OnLeave", function(self)
+	GameTooltip:Hide()
+end)
 
 -- Clear Button
 local ClearButton = CreateFrame("Button", nil, MainFrame, "GameMenuButtonTemplate")
